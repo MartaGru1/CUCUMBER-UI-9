@@ -3,11 +3,6 @@ const TGHtmlElementsPage = require('../../../pages/TGHtmlElementsPage')
 
 const tgHtmlElementsPage = new TGHtmlElementsPage()
 
-Then(/^user should see the "([^"]*)" page heading$/, (args1) => {
-  console.log(args1)
-  return true
-})
-
 When(/^user clicks on the "([^"]*)" button$/, (label) => {
   tgHtmlElementsPage.clickButtonByText(label)
 })

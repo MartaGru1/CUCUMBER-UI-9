@@ -23,6 +23,7 @@ module.exports = defineConfig({
   viewportWidth: 1920,
   chromeWebSecurity: false,
   e2e: {
+    reporter: require.resolve('@badeball/cypress-cucumber-preprocessor/pretty-reporter'),
     specPattern: '**/*.feature',
     setupNodeEvents,
   },
