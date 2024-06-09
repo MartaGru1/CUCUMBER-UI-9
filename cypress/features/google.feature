@@ -1,7 +1,8 @@
-Feature: Framework Test
+@Regression
+Feature: Google Test
 
-Scenario: Google Search Bar
+    Scenario: Google Search Bar
     Given user navigates to "https://www.google.com"
     When user search for "Tesla"
-    Then user should see "Tesla" in URL
+    Then user should see "Tesla" in the URL
     And user should see "Tesla" in the title
