@@ -24,6 +24,7 @@ module.exports = defineConfig({
   chromeWebSecurity: false,
   e2e: {
     env: {
+      ...process.env,
       filterSpecs: true,
       omitFiltered: true,
     },
