@@ -1,5 +1,7 @@
 class PaginationPage{
 
+/* Locators */
+
     getPaginationHeading() {
         return cy.get('h1.is-size-3');
     }
@@ -8,41 +10,38 @@ class PaginationPage{
         return cy.get('#sub_heading');
     }
 
-    getPopulatedCitiesParagraph() {
+    getContentText() {
         return cy.get('#content');
     }
 
-    getPreviousButton() {
-        return cy.contains('Previous');
+    getPaginationButtonByLabel(idLocator) {
+        return cy.get(`#${idLocator.toLowerCase()}`);
     }
 
-    getNextButton() {
-        return cy.contains('Next');
+/* Methods*/
+    clickPaginationButtonByLabel(idLocator) {
+        return cy.get(`#${idLocator.toLowerCase()}`).click();
     }
 
-    getDisabledNextButton() {
-        return cy.get('.disabled');
-    }
+    clickButtonUntilDisabled(label) {
+        this.clickPaginationButtonByLabel(label).then(($button) => {
+            if($button.is(':disabled')) {
+                this.clickPaginationButtonByLable(label);
 
-    getDisabledPreviousButton() {
-        return cy.get('.disabled');
-    }
 
-    getCityInfo() {
-        return cy.get('.city-info');
-    }
-
-    getCountryInfo() {
-        return cy.get('.country-info');
-    }   
-
-    getPopulationInfo() {
-        return cy.get('.population-info');
+                this.clickButtonUntilDisabled(label);
+            }
+        });
     }
 
     getCityImage() {
-        return cy.get('.city-image');
+        return cy.get('#city_image');
     }
+
+    getInfoText() {
+        return cy.get('[class$="info"]');
+    }
+   
 
 
 }

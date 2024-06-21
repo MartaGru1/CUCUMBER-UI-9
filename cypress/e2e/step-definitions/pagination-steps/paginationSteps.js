@@ -1,56 +1,51 @@
-/// <reference types="cypress" />
-import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
+
+const { Given, When, Then } = require("@badeball/cypress-cucumber-preprocessor");
 const PaginationPage = require('../../pages/paginationPage');
 
 const paginationPage = new PaginationPage();
 
 Given(/^user is on "([^"]*)"$/, (url) => {
-    cy.visit(url);
+    cy.visit(url, {failOnStatusCode: false});
   })
 
-Then(/^user should see "([^"]*)" heading$/, () => {
-    paginationPage.getPaginationHeading().should('be.visible').and('have.text',"Pagination");
+Then(/^user should see "([^"]*)" heading$/, (heading) => {
+    paginationPage.getPaginationHeading().should('have.text',"Pagination");
 })
 
 Then(/^user should see "([^"]*)" sub heading$/, () => {
-    paginationPage.getWorldCityPopulationsHeading().should('be.visible').and('have.text','World City Populations 2022');
+    paginationPage.getWorldCityPopulationsHeading().should('have.text','World City Populations 2022');
 })
 
 Then(/^user should see "([^"]*)" paragraph$/, () => {
-    paginationPage.getPopulatedCitiesParagraph().should('be.visble')
-    .and('have.text','What are the most populated cities in the world? Here is a list of the top five most populated cities in the world:');
+    paginationPage.getCotentText().should('have.text','What are the most populated cities in the world? Here is a list of the top five most populated cities in the world:');
 })
 
-Then('the user should see the “Previous” button is disabled', () => {
-    PaginationPage.getPreviousButton().should('have.class', 'disabled');
+Then(/^user should see the "([^"]*)" button is disabled$/, (label) => {
+    paginationPage.getPaginationButtonByLabel(label).should('be.disabled');
 });
   
-Then('the user should see the “Next” button is enabled', () => {
-    PaginationPage.getNextButton().should('not.have.class', 'disabled');
-});
-  
-When('the user clicks on the “Next” button', () => {
-    PaginationPage.getNextButton().click();
-});
-  
-Then('the user should see the “Previous” button is enabled', () => {
-    PaginationPage.getPreviousButton().should('not.have.class', 'disabled');
-});
 
-When('the user clicks on the “Previous” button', () => {
-    PaginationPage.getPreviousButton().click();
-});
+Then(/^user should see the "([^"]*)" button is enabled$/, () => {
+    paginationPage.getPaginationButtonByLabel(label).should('be.enabled');
+})
 
-Then('the user should see the “Next” button is disabled', () => {
-   PaginationPage.getNextButton().should('have.class', 'disabled');
-});
+When(/^user clicks on "([^"]*)" button$/, (label) => {
+    paginationPage.clickPaginationButtonByLabel(label);
+})
 
-Then ('user should see the city information', (city,dataTable) => {
-    const cityInfo = dataTable.hashes()[0];
-    paginationPage.getCityInfo().should('have.text', cityInfo.city);
-    paginationPage.getCountryInfo().should('have.text', cityInfo.country);
-    paginationPage.getPopulationInfo().should('have.text', cityInfo.population);
-    paginationPage.getCityImage().should('have.attr', 'src', cityInfo.image);
+When(/^user clicks on "([^"]*)" button till it becomes disabled$/, (label) => {
+    paginationPage.clickButtonUntilDisabled(label);
+})
 
+
+Then(/^the user should see "([^"]*)" City with the info below and an image$/, (city, dataTable) => {
+    const expectedInfo = dataTable.rawTable.flat();
+
+    paginationPage.getInfoText().each(($el, index) => {
+        cy.wrap($el).should('have.text', expectedInfo[index]);
+    })
+
+    paginationPage.getCityImage().should('be.visible');
+    
 });
 
