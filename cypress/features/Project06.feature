@@ -1,7 +1,7 @@
 Feature: Project 06 - Inventory Table
 
     Background:
-        Given the user is on 'https://techglobal-training.com/frontend/project-4'
+        Given the user is on "https://techglobal-training.com/frontend/project-4"
 
 
     Scenario: Test Case 01 - Validate the default content of the inventory table
@@ -40,9 +40,9 @@ Feature: Project 06 - Inventory Table
 
     Scenario: Test Case 04 - Validate the new product added
         When the user clicks on the "ADD PRODUCT" button
-        And the user enters the quantity as "2"
-        And the user enters the product as "Mouse"
-        And the user enters the price as "100"
+        And the user enters the "quantity" as "2"
+        And the user enters the "product" as "Mouse"
+        And the user enters the "price" as "100"
         And the user clicks on the "SUBMIT" button
         Then the user should see the table with the new row below
 

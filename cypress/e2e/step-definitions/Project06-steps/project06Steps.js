@@ -1,129 +1,112 @@
 const { Given, When, Then } = require ("@badeball/cypress-cucumber-preprocessor")
 const Project06Page = require("../../pages/Project06Page")
-const Project06ProductModalPage = require("../../pages/Project06ProductModalPage")
 
 const project06Page = new Project06Page();
-const project06ProductModalPage = new Project06ProductModalPage();
 
 
 Given(/^user is on "([^"]*)"$/, (url) => {
     cy.visit(url);
 })
 
-Then(/^user should see "([^"]*)" heading$/, () => {
-    project06Page.getInventoryHeading().should('have.text',"Inventory");
+Then(/^user should see "([^"]*)" heading$/, (tableHeading) => {
+    project06Page.getInventoryHeading().should('have.text',tableHeading);
 })
 
-Then(/^the user should see the table with the headers$/, (dataTable) => {
-  const headers = dataTable.rawTable.flat();
-  project06Page.getTableHeaders().each(($el, index) => {
+Then(/^the user should see the table with the headers below$/, (dataTable) => {
+  const headers = dataTable.rawTable.flat()
+  project06Page.getTableHeaderRow().each(($el, index) => {
     cy.wrap($el).should('have.text', headers[index]);
   });
 
 });
 
-Then(/^the user should see the table with the rows$/, (dataTable) => {
-  const rows = dataTable.hashes();
-  rows.forEach((row, index) => {
-    project06Page.getTableRows().eq(index).find('td').each(($el, i) => {
-      cy.wrap($el).should('have.text', row[Object.keys(row)[i]]);
-    });
-  });
+Then(/^the user should see the table with the rows below$/, (dataTable) => {
+  const rows = dataTable.rawTable()
 
+  rows.forEach((row, index) => {
+    project06Page.getTableRows().each(($row, rowIndex) => {
+      const expextedRow = rows[rowIndex]
+
+      cy.wrap($row).find('td').each(($cell, cellIndex) => {
+        cy.wrap($cell).should('have.text', expextedRow[cellIndex]);
+      })
+    })
+  })
+})
+
+Then(/^user should see the "([^"]*)" button is enabled$/, (buttonName) => {
+  switch (buttonName) {
+    case 'ADD PRODUCT':
+      project06Page.getAddButton().should('be.enabled')
+      break;
+    case 'X': 
+      project06Page.getCloseButton().should('be.enabled')
+      break;
+    case 'SUBMIT':
+      project06Page.getSubmitButton().should('be.enabled')
+      break;
+    default:
+  }
 });
 
-Then(/^user should see the "([^"]*)" button is enabled$/, () => {
-  project06Page.getAddButton().should('have.text', 'ADD PRODUCT').and('be.enabled');
+Then(/^the user should see the "([^"]*)" text displayed$/, (totalText) => {
+  project06Page.getTotal().should('have.text', totalText);
 })
 
-Then(/^the user should see the "([^"]*)" text displayed$/, () => {
-  project06Page.getTotal().should('have.text', 'Total = $2,300');
-})
+
 
 
 When(/^the user clicks on the "([^"]*)" button$/, () => {
-  project06Page.clickAddButton();
+  switch (buttonText) {
+    case 'ADD PRODUCT':
+      project06Page.clickAddButton();
+      break;
+    case 'X':
+      project06Page.ckickCloseButton();
+      break;
+    case 'SUBMIT':
+      project06Page.clickSubmitButton();
+      break;
+    default:
+  }
 })
 
-Then(/^the user should see the "([^"]*)" modal with its heading$/, () => {
-  project06Page.getModalHeading().should('have.text', 'Add Product');
+Then(/^the user should see the "([^"]*)" modal with its heading$/, (headingTitle) => {
+  project06Page.getModalTitle().should('have.text', headingTitle);
 })
                                
-Then(/^the user should see the "([^"]*)" button is enabled$/, () => {
-  project06Page.getXButton().should('be.enabled');
-})
 
 Then(/^the user should see the "([^"]*)" label$/, (label) => {
- project06ProductModalPage.getQuantityLabel().should('have.text', 'Please select the quantity');
+  project06Page.getModalCardLables().contains(label);
 })
 
-Then(/^the user should see the "([^"]*)" input box is enabled$/, () => {
-  project06ProductModalPage.getQuantityInput().should('be.enabled');
+
+Then(/^the user should see the "([^"]*)" input box is enabled$/, (input) => {
+  project06Page.getModalCardInputs(input.toLowerCase()).should('be.enabled');
+ 
 })
 
-Then(/^the user should see the "([^"]*)" label$/, () => {
-  project06ProductModalPage.getProductLable().should('have.text', 'Please enter the product name');
+
+
+Then(/^the user should not see the "([^"]*)" modal$/, (productModal) => {
+  project06Page.getModalCard().should('not.exist');
 })
 
-Then(/^the user should see the "([^"]*)" input box is enabled$/, () => {
-  project06ProductModalPage.getProductInput().should('be.enabled');
-})
 
-Then(/^the user should see the "([^"]*)" label$/, () => {
-  project06ProductModalPage.getPriceLabel().should('have.text', 'Please enter the price of the product');
-})
 
-Then(/^the user should see the "([^"]*)" input box is enabled$/,() => {
-  project06ProductModalPage.getPriceInput().should('be.enabled');
+Then(/^the user enters the "([^"]*)" as "([^"]*)"$/, (label, input) => {
+  project06Page.getModalCardInputs(label).type(input);
+
 });
 
-Then(/^the user should see the "([^"]*)" button is enabled$/, () => {
-  project06ProductModalPage.getSubmitButton().should('be.enabled');
-})
 
-
-When(/^the user clicks on the "([^"]*)" button$/, () => {
-  project06ProductModalPage.clickXButton();
-})
-
-Then(/^the user should not see the "([^"]*)" modal$/, () => {
-  project06ProductModalPage.getModalHeading().should('not.exist');
-})
-
-
-When(/^the user clicks on the "([^"]*)" button$/, () => {
-  project06Page.clickAddButton();
-});
-
-When(/^the user enters the quantity as "([^"]*)"$/, (quantity) => {
-  project06ProductModalPage.getQuantityInput().type(quantity);
-});
-
-When(/^the user enters the product as "([^"]*)"$/, (product) => {
-  project06ProductModalPage.getProductInput().type(product);
-});
-
-When(/^the user enters the price as "([^"]*)"$/, (price) => {
-  project06ProductModalPage.getPriceInput().type(price);
-});
-
-When(/^the user clicks on the "([^"]*)" button$/, () => {
-  project06ProductModalPage.getSubmitButton().click();
-});
-
-Then(/^the user should see the table with the new row$/, (dataTable) => {
-  const newRow = dataTable.hashes()[0];
-  project06Page.getTableRows().last().within(() => {
-    cy.get('td').eq(0).should('have.text', newRow.Quantity);
-    cy.get('td').eq(1).should('have.text', newRow.Product);
-    cy.get('td').eq(2).should('have.text', newRow['Proce $']);
-    cy.get('td').eq(3).should('have.text', newRow['Total $']);
+Then(/^the user should see the table with the new row below$/, (dataTable) => {
+  const newRow = dataTable.rawTable.flat();
+  project06Page.getTableRows().last().find('td').each(($el, index) => {
+    cy.wrap($el).should('have.text', newRow[index]);
   });
 });
 
-Then(/^the user should see the "([^"]*)" text displayed$/, () => {
-  project06Page.getTotal().should('have.text', 'Total = $2,500');
-});
 
 
 

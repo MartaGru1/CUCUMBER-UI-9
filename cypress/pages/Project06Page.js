@@ -2,15 +2,15 @@ class Project06Page {
 
     /* Locators*/
     getInventoryHeading() {
-        return cy.get('h1.is-size-3');
+        return cy.get('.is-size-3');
     }
 
-    getTableHeaders() {
-        return cy.get('table thead tr th');
+    getTableHeaderRow() {
+        return cy.get('#product_table thead th');
     }
 
     getTableRows() {
-        return cy.get('table tbody tr');
+        return cy.get('#product_table tbody tr');
     }
     
     getAddButton() {
@@ -21,12 +21,59 @@ class Project06Page {
         return cy.get('#total_amount');
     }
 
+    getModalCard() {
+        return cy.get('.modal-card');
+    }
+
+    getModalTitle() {
+        return cy.get('#modal-card-title');
+    }
+
+    getCloseButton() {
+        return cy.get('.delete');
+    }
+
+    getModalCardLables() {
+        return cy.get('.field > label');
+    }
+
+    getModalCardInputs(label) {
+        return this.getModalCardLables().contains(label).next().find('input');
+    }
+
+    getSubmitButton() {
+        return cy.get('#submit');
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     /* Methods*/
 
     clickAddButton() {
-        return cy.get('#add_product_button').click();
+        this.getAddButton().click();
     }
+
+    clickSubtimButton() {
+        this.getSubmitButton().click();
+    }
+
+    clickCloseButton() {
+        this.getCloseButton().click();
+    }
+
+
+
+
+
 
 }
 
